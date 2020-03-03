@@ -26,7 +26,7 @@ public class DucPaymentMonitor {
     private EventPublisher eventPublisher;
 
     @Value("${io.lastwill.eventscan.duc.storage}")
-    private String ducStorageAddress ;
+    private String ducStorageAddress;
 
     @EventListener
     private void handleBtcBlock(NewBlockEvent event) {
@@ -34,38 +34,38 @@ public class DucPaymentMonitor {
             return;
         }
 
-                    List<WrapperTransaction> txes = event.getTransactionsByAddress().get(ducStorageAddress);
-                    if (txes == null || txes.isEmpty()) {
-                        //log.warn("There is no PaymentDetails entity found for DUC address {}.", paymentDetails.getRxAddress());
-                        return;
-                    }
+        List<WrapperTransaction> txes = event.getTransactionsByAddress().get(ducStorageAddress);
+        if (txes == null || txes.isEmpty()) {
+            //log.warn("There is no PaymentDetails entity found for DUC address {}.", paymentDetails.getRxAddress());
+            return;
+        }
 
-                    for (WrapperTransaction tx: txes) {
-                        for (WrapperOutput output: tx.getOutputs()) {
-                            if (output.getParentTransaction() == null) {
-                                log.warn("Skip it. Output {} has not parent transaction.", output);
-                                continue;
-                            }
-                            if (!output.getAddress().equalsIgnoreCase(ducStorageAddress)) {
-                                continue;
-                            }
+        for (WrapperTransaction tx : txes) {
+            for (WrapperOutput output : tx.getOutputs()) {
+                if (output.getParentTransaction() == null) {
+                    log.warn("Skip it. Output {} has not parent transaction.", output);
+                    continue;
+                }
+                if (!output.getAddress().equalsIgnoreCase(ducStorageAddress)) {
+                    continue;
+                }
 
-                            if ( 0 == output.getValue().compareTo( BigInteger.ZERO) ) {
-                                continue;
-                            }
+                if (0 == output.getValue().compareTo(BigInteger.ZERO)) {
+                    continue;
+                }
 
-                                eventPublisher.publish(
-                                        new UserPaymentEvent(
-                                                NetworkType.DUCATUS_MAINNET,
-                                                tx,
-                                                output.getValue(),
-                                                CryptoCurrency.DUC,
-                                                true
-                                        ));
+                eventPublisher.publish(
+                        new UserPaymentEvent(
+                                NetworkType.DUCATUS_MAINNET,
+                                tx,
+                                output.getValue(),
+                                CryptoCurrency.DUC,
+                                true
+                        ));
 
-                               log.warn("\u001B[32m"+ "|DUCATUS STORAGE| {} DUC RECEIVED !" + "\u001B[0m", output.getValue());
+                log.warn("\u001B[32m" + "|DUCATUS STORAGE| {} DUC RECEIVED !" + "\u001B[0m", output.getValue());
 
-                        }
-                    }
+            }
+        }
     }
 }

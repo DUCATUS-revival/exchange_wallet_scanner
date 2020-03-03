@@ -41,19 +41,19 @@ public class DucxPaymentMonitor {
             return;
         }
 
-        List<WrapperTransaction> txes = event.getTransactionsByAddress().get(ducxStorageAddress);
+        List<WrapperTransaction> txes = event.getTransactionsByAddress().get(ducxStorageAddress.toLowerCase());
         if (txes == null) {
             //log.warn("There is no PaymentDetails entity found for DUC address {}.", paymentDetails.getRxAddress());
             return;
         }
 
-        for (WrapperTransaction tx: txes) {
+        for (WrapperTransaction tx : txes) {
             final List<WrapperTransaction> transactions = event.getTransactionsByAddress().get(
                     ducxStorageAddress.toLowerCase()
             );
 
             if (transactions == null) {
-               // log.error("User {} received from DB, but was not found in transaction list (block    {}).", paymentDetailsETH, event.getBlock().getNumber());
+                // log.error("User {} received from DB, but was not found in transaction list (block    {}).", paymentDetailsETH, event.getBlock().getNumber());
                 continue;
             }
 
@@ -63,7 +63,7 @@ public class DucxPaymentMonitor {
                     return;
                 }
 
-                if ( 0 == transaction.getOutputs().get(0).getValue().compareTo( BigInteger.ZERO) ) {
+                if (0 == transaction.getOutputs().get(0).getValue().compareTo(BigInteger.ZERO)) {
                     return;
                 }
 
@@ -84,7 +84,7 @@ public class DucxPaymentMonitor {
                             return null;
                         });
 
-                log.warn("\u001B[32m"+ "|DUCATUSX STORAGE| {} DUCX RECEIVED !" + "\u001B[0m",transaction.getOutputs().get(0).getValue());
+                log.warn("\u001B[32m" + "|DUCATUSX STORAGE| {} DUCX RECEIVED !" + "\u001B[0m", transaction.getOutputs().get(0).getValue());
 
             });
         }
