@@ -1,8 +1,6 @@
 package io.lastwill.eventscan.model;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigInteger;
