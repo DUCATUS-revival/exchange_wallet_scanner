@@ -12,6 +12,7 @@ import java.math.BigInteger;
 @Getter
 public class Transfer {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne
@@ -25,6 +26,7 @@ public class Transfer {
     private BigInteger amount;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private TransactionStatus status;
 
 }
