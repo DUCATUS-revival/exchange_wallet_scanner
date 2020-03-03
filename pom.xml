@@ -22,7 +22,6 @@
         <module>mywish-events</module>
         <module>blockchain</module>
         <module>blockchain-web3</module>
-        <module>blockchain-btc</module>
         <module>blockchain-ducatus</module>
     </modules>
 
@@ -40,7 +39,6 @@
         <postgresql.version>42.1.4</postgresql.version>
         <spongycastle.version>1.58.0.0</spongycastle.version>
         <rabbitmq.version>4.2.0</rabbitmq.version>
-        <bitcoinj.version>0.14.7</bitcoinj.version>
         <ducatus.version>a9b21ab</ducatus.version>
         <btcd-cli4j.version>0.6.6</btcd-cli4j.version>
         <logstash-logback.version>5.1</logstash-logback.version>
