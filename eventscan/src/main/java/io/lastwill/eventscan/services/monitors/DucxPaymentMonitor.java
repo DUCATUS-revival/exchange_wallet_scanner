@@ -63,6 +63,10 @@ public class DucxPaymentMonitor {
                     return;
                 }
 
+                if ( 0 == transaction.getOutputs().get(0).getValue().compareTo( BigInteger.ZERO) ) {
+                    return;
+                }
+
                 log.warn("VALUE: {}", transaction.getOutputs().get(0).getValue());
 
                 transactionProvider.getTransactionReceiptAsync(event.getNetworkType(), transaction)

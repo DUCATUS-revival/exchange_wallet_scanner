@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 
@@ -48,6 +50,10 @@ public class DucPaymentMonitor {
                                 continue;
                             }
 
+                            if ( 0 == output.getValue().compareTo( BigInteger.ZERO) ) {
+                                continue;
+                            }
+
                                 eventPublisher.publish(
                                         new UserPaymentEvent(
                                                 NetworkType.DUCATUS_MAINNET,
@@ -57,7 +63,7 @@ public class DucPaymentMonitor {
                                                 true
                                         ));
 
-                               log.warn("\u001B[32m"+ "|DUCATUS STORAGE| {} DUC RECEIVED !" + "\u001B[0m",output.getValue());
+                               log.warn("\u001B[32m"+ "|DUCATUS STORAGE| {} DUC RECEIVED !" + "\u001B[0m", output.getValue());
 
                         }
                     }
