@@ -14,6 +14,6 @@ public class UserPaymentEvent extends PaymentEvent {
                             BigInteger amount,
                             CryptoCurrency currency,
                             boolean isSuccess) {
-        super(networkType, transaction, transaction.getSingleOutputAddress(), amount, currency, isSuccess);
+        super(networkType, transaction, amount, currency, isSuccess);
     }
 }
