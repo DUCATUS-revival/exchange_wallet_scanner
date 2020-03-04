@@ -8,5 +8,5 @@ public enum TransactionStatus {
     DONE,
     ERROR,
     OK,
-    WAITING
+    WAITING_FOR_CONFIRMATION
 }

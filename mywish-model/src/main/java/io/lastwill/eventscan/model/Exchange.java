@@ -3,7 +3,6 @@ package io.lastwill.eventscan.model;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 
 @Entity
 @Table(name = "exchange")
@@ -19,9 +18,6 @@ public class Exchange {
     @Column(name = "to_address")
     private String toAddress;
 
-    @Column(name = "amount")
-    private BigInteger amount;
-
     @Column(name = "from_curr")
     @Enumerated(EnumType.STRING)
     private CryptoCurrency fromCurrency;
@@ -29,11 +25,4 @@ public class Exchange {
     @Column(name = "to_curr")
     @Enumerated(EnumType.STRING)
     private CryptoCurrency toCurrency;
-
-    @Column(name = "tx_hash")
-    private String txHash;
-
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private TransactionStatus status;
 }

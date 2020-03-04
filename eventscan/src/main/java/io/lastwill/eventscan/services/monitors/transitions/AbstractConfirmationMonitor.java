@@ -39,7 +39,7 @@ public abstract class AbstractConfirmationMonitor {
             return;
         }
         transferRepository
-                .findAllByStatus(TransactionStatus.WAITING)
+                .findAllByStatus(TransactionStatus.WAITING_FOR_CONFIRMATION)
                 .stream()
                 .filter(entry -> txHashes.contains(entry.getTxHash()))
                 .forEach(entry -> {
