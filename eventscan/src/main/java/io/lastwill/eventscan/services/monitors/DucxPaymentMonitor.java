@@ -2,14 +2,16 @@ package io.lastwill.eventscan.services.monitors;
 
 import io.lastwill.eventscan.events.model.UserPaymentEvent;
 import io.lastwill.eventscan.model.CryptoCurrency;
+import io.lastwill.eventscan.model.Exchange;
 import io.lastwill.eventscan.model.NetworkType;
+import io.lastwill.eventscan.model.TransactionStatus;
+import io.lastwill.eventscan.repositories.ExchangeRepository;
 import io.lastwill.eventscan.services.TransactionProvider;
 import io.mywish.blockchain.WrapperTransaction;
 import io.mywish.scanner.model.NewBlockEvent;
 import io.mywish.scanner.services.EventPublisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -23,15 +25,15 @@ public class DucxPaymentMonitor {
     @Autowired
     private EventPublisher eventPublisher;
 
-    @Value("${io.lastwill.eventscan.ducx.storage}")
-    private String ducxStorageAddress;
+    @Autowired
+    private ExchangeRepository exchangeRepository;
 
     @Autowired
     private TransactionProvider transactionProvider;
 
     @EventListener
     private void onNewBlockEvent(NewBlockEvent event) {
-
+        // payments only in mainnet works
         if (event.getNetworkType() != NetworkType.DUCATUSX_MAINNET) {
             return;
         }
@@ -41,39 +43,30 @@ public class DucxPaymentMonitor {
             return;
         }
 
-        List<WrapperTransaction> txes = event.getTransactionsByAddress().get(ducxStorageAddress.toLowerCase());
-        if (txes == null) {
-            //log.warn("There is no PaymentDetails entity found for DUC address {}.", paymentDetails.getRxAddress());
-            return;
-        }
-
-        for (WrapperTransaction tx : txes) {
+        List<Exchange> exchangeDetails = exchangeRepository.findByRxAddress(addresses,  TransactionStatus.WAITING,CryptoCurrency.DUCX);
+        for (Exchange exchangeDetailsDUCX : exchangeDetails) {
             final List<WrapperTransaction> transactions = event.getTransactionsByAddress().get(
-                    ducxStorageAddress.toLowerCase()
+                    exchangeDetailsDUCX.getReceiveAddress().toLowerCase()
             );
 
             if (transactions == null) {
-                // log.error("User {} received from DB, but was not found in transaction list (block    {}).", paymentDetailsETH, event.getBlock().getNumber());
+                log.error("User {} received from DB, but was not found in transaction list (block    {}).", exchangeDetailsDUCX, event.getBlock().getNumber());
                 continue;
             }
 
             transactions.forEach(transaction -> {
-                if (!ducxStorageAddress.equalsIgnoreCase(transaction.getOutputs().get(0).getAddress())) {
-                    //log.debug("Found transaction out from internal address. Skip it.");
+                if (!exchangeDetailsDUCX.getReceiveAddress().equalsIgnoreCase(transaction.getOutputs().get(0).getAddress())) {
+                    log.debug("Found transaction out from internal address. Skip it.");
                     return;
                 }
 
-                if (0 == transaction.getOutputs().get(0).getValue().compareTo(BigInteger.ZERO)) {
-                    return;
-                }
-
-                log.warn("VALUE: {}", transaction.getOutputs().get(0).getValue());
+                if (exchangeDetailsDUCX.getAmount().equals(transaction.getOutputs().get(0).getValue())) {
 
                 transactionProvider.getTransactionReceiptAsync(event.getNetworkType(), transaction)
                         .thenAccept(receipt -> {
                             eventPublisher.publish(new UserPaymentEvent(
                                     NetworkType.DUCATUSX_MAINNET,
-                                    tx,
+                                    transaction,
                                     transaction.getOutputs().get(0).getValue(),
                                     CryptoCurrency.DUCX,
                                     true
@@ -84,8 +77,11 @@ public class DucxPaymentMonitor {
                             return null;
                         });
 
-                log.warn("\u001B[32m" + "|DUCATUSX STORAGE| {} DUCX RECEIVED !" + "\u001B[0m", transaction.getOutputs().get(0).getValue());
+                    log.warn("\u001B[32m"+ "|{}| {} DUCX RECEIVED!" + "\u001B[0m",exchangeDetailsDUCX.getReceiveAddress(),transaction.getOutputs().get(0).getValue());
 
+//                    exchangeRepository.updatePaymentStatus( paymentDetailsETH.getRxAddress(),"true");
+//                    log.warn("\u001B[32m"+ "PAYMENT {} STATUS UPDATED!" + "\u001B[0m",paymentDetailsETH.getRxAddress());
+            }
             });
         }
     }

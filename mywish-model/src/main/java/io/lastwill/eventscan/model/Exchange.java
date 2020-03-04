@@ -13,8 +13,8 @@ public class Exchange {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "from_address")
-    private String fromAdress;
+    @Column(name = "receive_address")
+    private String receiveAddress;
 
     @Column(name = "to_address")
     private String toAddress;
