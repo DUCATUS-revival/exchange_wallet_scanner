@@ -13,10 +13,6 @@ public class Transfer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "exchange_id", referencedColumnName = "id")
-    private Exchange exchangeId;
-
     @Column(name = "tx_hash")
     private String txHash;
 
