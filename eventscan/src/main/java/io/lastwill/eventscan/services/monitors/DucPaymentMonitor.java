@@ -28,6 +28,7 @@ public class DucPaymentMonitor {
 
     @EventListener
     private void handleBtcBlock(NewBlockEvent event) {
+
         if (event.getNetworkType() != NetworkType.DUCATUS_MAINNET) {
             return;
         }
@@ -42,7 +43,6 @@ public class DucPaymentMonitor {
                         //log.warn("There is no PaymentDetails entity found for DUC address {}.", paymentDetails.getRxAddress());
                         return;
                     }
-
 
                     for (WrapperTransaction tx: txes) {
                         for (WrapperOutput output: tx.getOutputs()) {
@@ -67,10 +67,10 @@ public class DucPaymentMonitor {
                                                 true
                                         ));
 
-                                log.warn("\u001B[32m"+ "|{}| {} DUC RECEIVED !" + "\u001B[0m",exchangeDetails.getReceiveAddress(), output.getValue());
+                                log.warn("\u001B[32m"+ "|{}| {} DUC RECEIVED !" + "\u001B[0m",
+                                        exchangeDetails.getReceiveAddress(),
+                                        output.getValue());
 
-//                                paymentDucRepository.updatePaymentStatus( paymentDetails.getRxAddress(),"true");
-//                                log.warn("\u001B[32m"+ "PAYMENT {} STATUS UPDATED!" + "\u001B[0m",output.getAddress());
                             }
 
                         }

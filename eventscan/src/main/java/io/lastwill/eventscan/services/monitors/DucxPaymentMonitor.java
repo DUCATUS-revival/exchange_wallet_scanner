@@ -33,7 +33,7 @@ public class DucxPaymentMonitor {
 
     @EventListener
     private void onNewBlockEvent(NewBlockEvent event) {
-        // payments only in mainnet works
+
         if (event.getNetworkType() != NetworkType.DUCATUSX_MAINNET) {
             return;
         }
@@ -60,8 +60,6 @@ public class DucxPaymentMonitor {
                     return;
                 }
 
-                if (exchangeDetailsDUCX.getAmount().equals(transaction.getOutputs().get(0).getValue())) {
-
                 transactionProvider.getTransactionReceiptAsync(event.getNetworkType(), transaction)
                         .thenAccept(receipt -> {
                             eventPublisher.publish(new UserPaymentEvent(
@@ -77,11 +75,10 @@ public class DucxPaymentMonitor {
                             return null;
                         });
 
-                    log.warn("\u001B[32m"+ "|{}| {} DUCX RECEIVED!" + "\u001B[0m",exchangeDetailsDUCX.getReceiveAddress(),transaction.getOutputs().get(0).getValue());
+                    log.warn("\u001B[32m"+ "|{}| {} DUCX RECEIVED!" + "\u001B[0m",
+                            exchangeDetailsDUCX.getReceiveAddress(),
+                            transaction.getOutputs().get(0).getValue());
 
-//                    exchangeRepository.updatePaymentStatus( paymentDetailsETH.getRxAddress(),"true");
-//                    log.warn("\u001B[32m"+ "PAYMENT {} STATUS UPDATED!" + "\u001B[0m",paymentDetailsETH.getRxAddress());
-            }
             });
         }
     }
