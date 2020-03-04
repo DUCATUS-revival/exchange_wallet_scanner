@@ -42,7 +42,7 @@ public class DucxPaymentMonitor {
             return;
         }
 
-        List<Exchange> exchangeDetails = exchangeRepository.findByRxAddress(addresses, TransactionStatus.WAITING, CryptoCurrency.DUCX);
+        List<Exchange> exchangeDetails = exchangeRepository.findByRxAddress(addresses, CryptoCurrency.DUCX);
         for (Exchange exchangeDetailsDUCX : exchangeDetails) {
             final List<WrapperTransaction> transactions = event.getTransactionsByAddress().get(
                     exchangeDetailsDUCX.getReceiveAddress().toLowerCase()

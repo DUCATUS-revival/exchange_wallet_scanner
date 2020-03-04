@@ -36,7 +36,7 @@ public class DucPaymentMonitor {
         if (addresses.isEmpty()) {
             return;
         }
-        exchangeRepository.findByRxAddress(addresses, TransactionStatus.WAITING, CryptoCurrency.DUC)
+        exchangeRepository.findByRxAddress(addresses,CryptoCurrency.DUC)
                 .forEach(exchangeDetails -> {
                     List<WrapperTransaction> txes = event.getTransactionsByAddress().get(exchangeDetails.getReceiveAddress());
                     if (txes == null || txes.isEmpty()) {
