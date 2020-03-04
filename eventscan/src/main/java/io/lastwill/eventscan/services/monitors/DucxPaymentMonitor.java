@@ -33,7 +33,6 @@ public class DucxPaymentMonitor {
 
     @EventListener
     private void onNewBlockEvent(NewBlockEvent event) {
-
         if (event.getNetworkType() != NetworkType.DUCATUSX_MAINNET) {
             return;
         }
@@ -43,13 +42,13 @@ public class DucxPaymentMonitor {
             return;
         }
 
-        List<Exchange> exchangeDetails = exchangeRepository.findByRxAddress(addresses,  TransactionStatus.WAITING,CryptoCurrency.DUCX);
+        List<Exchange> exchangeDetails = exchangeRepository.findByRxAddress(addresses, TransactionStatus.WAITING, CryptoCurrency.DUCX);
         for (Exchange exchangeDetailsDUCX : exchangeDetails) {
             final List<WrapperTransaction> transactions = event.getTransactionsByAddress().get(
                     exchangeDetailsDUCX.getReceiveAddress().toLowerCase()
             );
 
-            if (transactions == null) {
+            if (transactions == null || transactions.isEmpty()) {
                 log.error("User {} received from DB, but was not found in transaction list (block    {}).", exchangeDetailsDUCX, event.getBlock().getNumber());
                 continue;
             }
@@ -75,23 +74,11 @@ public class DucxPaymentMonitor {
                             return null;
                         });
 
-                    log.warn("\u001B[32m"+ "|{}| {} DUCX RECEIVED!" + "\u001B[0m",
-                            exchangeDetailsDUCX.getReceiveAddress(),
-                            transaction.getOutputs().get(0).getValue());
+                log.warn("\u001B[32m" + "|{}| {} DUCX RECEIVED!" + "\u001B[0m",
+                        exchangeDetailsDUCX.getReceiveAddress(),
+                        transaction.getOutputs().get(0).getValue());
 
             });
         }
     }
-
-    private BigInteger getAmountFor(final String address, final WrapperTransaction transaction) {
-        BigInteger result = BigInteger.ZERO;
-        if (address.equalsIgnoreCase(transaction.getInputs().get(0))) {
-            result = result.subtract(transaction.getOutputs().get(0).getValue());
-        }
-        if (address.equalsIgnoreCase(transaction.getOutputs().get(0).getAddress())) {
-            result = result.add(transaction.getOutputs().get(0).getValue());
-        }
-        return result;
-    }
-
 }

@@ -39,13 +39,12 @@ public class DucPaymentMonitor {
         exchangeRepository.findByRxAddress(addresses, TransactionStatus.WAITING, CryptoCurrency.DUC)
                 .forEach(exchangeDetails -> {
                     List<WrapperTransaction> txes = event.getTransactionsByAddress().get(exchangeDetails.getReceiveAddress());
-                    if (txes == null) {
-                        //log.warn("There is no PaymentDetails entity found for DUC address {}.", paymentDetails.getRxAddress());
+                    if (txes == null || txes.isEmpty()) {
                         return;
                     }
 
-                    for (WrapperTransaction tx: txes) {
-                        for (WrapperOutput output: tx.getOutputs()) {
+                    for (WrapperTransaction tx : txes) {
+                        for (WrapperOutput output : tx.getOutputs()) {
                             if (output.getParentTransaction() == null) {
                                 log.warn("Skip it. Output {} has not parent transaction.", output);
                                 continue;
@@ -53,26 +52,18 @@ public class DucPaymentMonitor {
                             if (!output.getAddress().equalsIgnoreCase(exchangeDetails.getReceiveAddress())) {
                                 continue;
                             }
+                            eventPublisher.publish(
+                                    new UserPaymentEvent(
+                                            NetworkType.DUCATUS_MAINNET,
+                                            tx,
+                                            output.getValue(),
+                                            CryptoCurrency.DUC,
+                                            true
+                                    ));
 
-//                            log.warn("VALUE: {}", output.getValue());
-//                            log.warn("VALUE: {}", exchangeDetails.getAmount());
-
-                            if (output.getValue().equals(exchangeDetails.getAmount())) {
-                                eventPublisher.publish(
-                                        new UserPaymentEvent(
-                                                NetworkType.DUCATUS_MAINNET,
-                                                tx,
-                                                output.getValue(),
-                                                CryptoCurrency.DUC,
-                                                true
-                                        ));
-
-                                log.warn("\u001B[32m"+ "|{}| {} DUC RECEIVED !" + "\u001B[0m",
-                                        exchangeDetails.getReceiveAddress(),
-                                        output.getValue());
-
-                            }
-
+                            log.warn("\u001B[32m" + "|{}| {} DUC RECEIVED !" + "\u001B[0m",
+                                    exchangeDetails.getReceiveAddress(),
+                                    output.getValue());
                         }
                     }
                 });
