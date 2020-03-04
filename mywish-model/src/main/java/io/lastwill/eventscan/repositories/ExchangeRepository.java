@@ -11,6 +11,6 @@ import java.util.Collection;
 import java.util.List;
 
 public interface ExchangeRepository extends CrudRepository<Exchange, Long> {
-    @Query("select c from Exchange c where c.receiveAddress = :receiveAddress and c.fromCurrency = :fromCurrency")
+    @Query("select c from Exchange c where c.receiveAddress in :receiveAddress and c.fromCurrency = :fromCurrency")
     List<Exchange> findByRxAddress(@Param("receiveAddress") Collection<String> receiveAddress,@Param("fromCurrency") CryptoCurrency fromCurrency);
 }
