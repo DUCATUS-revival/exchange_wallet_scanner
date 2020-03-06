@@ -19,7 +19,7 @@ import java.util.Set;
 
 @Slf4j
 @Component
-public class DucxPaymentMonitor {
+public class EthPaymentMonitor {
     @Autowired
     private EventPublisher eventPublisher;
 
@@ -31,7 +31,7 @@ public class DucxPaymentMonitor {
 
     @EventListener
     private void onNewBlockEvent(NewBlockEvent event) {
-        if (event.getNetworkType() != NetworkType.DUCATUSX_MAINNET) {
+        if (event.getNetworkType() != NetworkType.ETHEREUM_MAINNET) {
             return;
         }
 
@@ -40,19 +40,19 @@ public class DucxPaymentMonitor {
             return;
         }
 
-        List<ExchangeRequest> exchangeDetails = exchangRequestRepository.findByDucxRxAddress(addresses);
-        for (ExchangeRequest exchangeDetailsDUCX : exchangeDetails) {
+        List<ExchangeRequest> exchangeDetails = exchangRequestRepository.findByEthRxAddress(addresses);
+        for (ExchangeRequest exchangeDetailsETH : exchangeDetails) {
             final List<WrapperTransaction> transactions = event.getTransactionsByAddress().get(
-                    exchangeDetailsDUCX.getDucxAddress().toLowerCase()
+                    exchangeDetailsETH.getEthAddress().toLowerCase()
             );
 
             if (transactions == null || transactions.isEmpty()) {
-                log.error("User {} received from DB, but was not found in transaction list (block    {}).", exchangeDetailsDUCX, event.getBlock().getNumber());
+                log.error("User {} received from DB, but was not found in transaction list (block    {}).", exchangeDetailsETH, event.getBlock().getNumber());
                 continue;
             }
 
             transactions.forEach(transaction -> {
-                if (!exchangeDetailsDUCX.getDucxAddress().equalsIgnoreCase(transaction.getOutputs().get(0).getAddress())) {
+                if (!exchangeDetailsETH.getEthAddress().equalsIgnoreCase(transaction.getOutputs().get(0).getAddress())) {
                     log.debug("Found transaction out from internal address. Skip it.");
                     return;
                 }
@@ -60,10 +60,10 @@ public class DucxPaymentMonitor {
                 transactionProvider.getTransactionReceiptAsync(event.getNetworkType(), transaction)
                         .thenAccept(receipt -> {
                             eventPublisher.publish(new UserPaymentEvent(
-                                    NetworkType.DUCATUSX_MAINNET,
+                                    NetworkType.ETHEREUM_MAINNET,
                                     transaction,
                                     transaction.getOutputs().get(0).getValue(),
-                                    CryptoCurrency.DUCX,
+                                    CryptoCurrency.ETH,
                                     true
                             ));
                         })
@@ -72,8 +72,8 @@ public class DucxPaymentMonitor {
                             return null;
                         });
 
-                log.warn("\u001B[32m" + "|{}| {} DUCX RECEIVED!" + "\u001B[0m",
-                        exchangeDetailsDUCX.getDucxAddress(),
+                log.warn("\u001B[32m" + "|{}| {} ETH RECEIVED!" + "\u001B[0m",
+                        exchangeDetailsETH.getEthAddress(),
                         transaction.getOutputs().get(0).getValue());
 
             });

@@ -13,7 +13,7 @@ public enum NetworkType {
     public final static String DUCATUS_MAINNET_VALUE = "DUCATUS_MAINNET";
     public final static String DUCATUSX_MAINNET_VALUE = "DUCATUSX_MAINNET";
     public final static String BTC_MAINNET_VALUE = "BTC_MAINNET";
-    public final static String ETHEREUM_MAINNET_VALUE = "WEB3_MAINNET";
+    public final static String ETHEREUM_MAINNET_VALUE = "ETHEREUM_MAINNET";
 
     private final NetworkProviderType networkProviderType;
 

@@ -2,7 +2,6 @@ package io.lastwill.eventscan.services.monitors;
 
 import io.lastwill.eventscan.events.model.UserPaymentEvent;
 import io.lastwill.eventscan.model.CryptoCurrency;
-import io.lastwill.eventscan.model.ExchangeRequest;
 import io.lastwill.eventscan.model.NetworkType;
 import io.lastwill.eventscan.repositories.ExchangRequestRepository;
 import io.mywish.blockchain.WrapperOutput;
@@ -20,7 +19,7 @@ import java.util.Set;
 
 @Slf4j
 @Component
-public class DucPaymentMonitor {
+public class BtcPaymentMonitor {
     @Autowired
     private ExchangRequestRepository exchangRequestRepository;
     @Autowired
@@ -29,16 +28,16 @@ public class DucPaymentMonitor {
     @EventListener
     private void handleBtcBlock(NewBlockEvent event) {
 
-        if (event.getNetworkType() != NetworkType.DUCATUS_MAINNET) {
+        if (event.getNetworkType() != NetworkType.BTC_MAINNET) {
             return;
         }
         Set<String> addresses = event.getTransactionsByAddress().keySet();
         if (addresses.isEmpty()) {
             return;
         }
-        exchangRequestRepository.findByDucRxAddress(addresses)
+        exchangRequestRepository.findByBtcRxAddress(addresses)
                 .forEach(exchangeDetails -> {
-                    List<WrapperTransaction> txes = event.getTransactionsByAddress().get(exchangeDetails.getDucAddress());
+                    List<WrapperTransaction> txes = event.getTransactionsByAddress().get(exchangeDetails.getBtcAddress());
                     if (txes == null || txes.isEmpty()) {
                         return;
                     }
@@ -49,20 +48,20 @@ public class DucPaymentMonitor {
                                 log.warn("Skip it. Output {} has not parent transaction.", output);
                                 continue;
                             }
-                            if (!output.getAddress().equalsIgnoreCase(exchangeDetails.getDucAddress())) {
+                            if (!output.getAddress().equalsIgnoreCase(exchangeDetails.getBtcAddress())) {
                                 continue;
                             }
                             eventPublisher.publish(
                                     new UserPaymentEvent(
-                                            NetworkType.DUCATUS_MAINNET,
+                                            NetworkType.BTC_MAINNET,
                                             tx,
                                             output.getValue(),
-                                            CryptoCurrency.DUC,
+                                            CryptoCurrency.BTC,
                                             true
                                     ));
 
-                            log.warn("\u001B[32m" + "|{}| {} DUC RECEIVED !" + "\u001B[0m",
-                                    exchangeDetails.getDucAddress(),
+                            log.warn("\u001B[32m" + "|{}| {} BTC RECEIVED !" + "\u001B[0m",
+                                    exchangeDetails.getBtcAddress(),
                                     output.getValue());
                         }
                     }
