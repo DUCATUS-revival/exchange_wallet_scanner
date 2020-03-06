@@ -1,5 +1,6 @@
 package io.lastwill.eventscan.services.monitors.transitions;
 
+import io.lastwill.eventscan.model.CryptoCurrency;
 import io.lastwill.eventscan.model.NetworkType;
 import io.lastwill.eventscan.repositories.TransferRepository;
 import io.mywish.scanner.services.EventPublisher;
@@ -11,6 +12,6 @@ public class DucTransitionConfirmationMonitor extends AbstractConfirmationMonito
     public DucTransitionConfirmationMonitor(
             @Autowired TransferRepository transferRepository,
             @Autowired EventPublisher publisher) {
-        super(transferRepository, publisher, NetworkType.DUCATUS_MAINNET);
+        super(CryptoCurrency.DUC, transferRepository, publisher, NetworkType.DUCATUS_MAINNET);
     }
 }

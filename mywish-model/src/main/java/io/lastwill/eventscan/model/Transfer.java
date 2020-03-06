@@ -23,4 +23,7 @@ public class Transfer {
     @Enumerated(EnumType.STRING)
     private TransactionStatus status;
 
+    @Column(name = "currency")
+    private CryptoCurrency currency;
+
 }

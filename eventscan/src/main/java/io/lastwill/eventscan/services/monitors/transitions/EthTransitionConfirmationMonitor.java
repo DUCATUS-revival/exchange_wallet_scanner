@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DucXTransitionConfirmationMonitor extends AbstractConfirmationMonitor {
-    public DucXTransitionConfirmationMonitor(
+public class EthTransitionConfirmationMonitor extends AbstractConfirmationMonitor {
+    public EthTransitionConfirmationMonitor(
             @Autowired TransferRepository transferRepository,
             @Autowired EventPublisher publisher) {
-        super(CryptoCurrency.DUCX, transferRepository, publisher, NetworkType.DUCATUSX_MAINNET);
+        super(CryptoCurrency.ETH, transferRepository, publisher, NetworkType.ETHEREUM_MAINNET);
     }
 }

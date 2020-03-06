@@ -20,6 +20,7 @@ public class TransitionEventHandler {
             externalNotifier.send(
                     event.getNetworkType(),
                     new TransferConfirmNotify(
+                            event.getCurrency(),
                             event.getTxHash(),
                             event.getTransferId(),
                             event.isSuccess())

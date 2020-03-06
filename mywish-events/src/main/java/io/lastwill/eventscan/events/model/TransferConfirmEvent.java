@@ -1,5 +1,6 @@
 package io.lastwill.eventscan.events.model;
 
+import io.lastwill.eventscan.model.CryptoCurrency;
 import io.lastwill.eventscan.model.NetworkType;
 import lombok.Getter;
 
@@ -9,12 +10,13 @@ public class TransferConfirmEvent extends BaseEvent {
     private final long transferId;
     private final String type = "transferred";
     private final boolean isSuccess;
+    private final CryptoCurrency currency;
 
-    public TransferConfirmEvent(NetworkType networkType, Long transferId, String txHash, boolean isSuccess) {
+    public TransferConfirmEvent(CryptoCurrency currency, NetworkType networkType, Long transferId, String txHash, boolean isSuccess) {
         super(networkType);
+        this.currency = currency;
         this.txHash = txHash;
         this.transferId = transferId;
         this.isSuccess = isSuccess;
     }
-
 }

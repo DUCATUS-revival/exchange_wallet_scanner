@@ -1,6 +1,7 @@
 package io.lastwill.eventscan.services.monitors.transitions;
 
 import io.lastwill.eventscan.events.model.TransferConfirmEvent;
+import io.lastwill.eventscan.model.CryptoCurrency;
 import io.lastwill.eventscan.model.NetworkType;
 import io.lastwill.eventscan.model.TransactionStatus;
 import io.lastwill.eventscan.repositories.TransferRepository;
@@ -19,11 +20,14 @@ public abstract class AbstractConfirmationMonitor {
     private final TransferRepository transferRepository;
     private final NetworkType networkType;
     private final EventPublisher publisher;
+    private final CryptoCurrency currency;
 
     public AbstractConfirmationMonitor(
+            CryptoCurrency currency,
             TransferRepository transferRepository,
             EventPublisher publisher,
             NetworkType networkType) {
+        this.currency = currency;
         this.transferRepository = transferRepository;
         this.networkType = networkType;
         this.publisher = publisher;
@@ -39,12 +43,12 @@ public abstract class AbstractConfirmationMonitor {
             return;
         }
         transferRepository
-                .findAllByStatus(TransactionStatus.WAITING_FOR_CONFIRMATION)
+                .findAllByStatusAndCurrency(TransactionStatus.WAITING_FOR_CONFIRMATION, currency)
                 .stream()
                 .filter(entry -> txHashes.contains(entry.getTxHash()))
                 .forEach(entry -> {
                     log.debug("{}: Transaction {} confirmed", this.getClass().getSimpleName(), entry.getTxHash());
-                    publisher.publish(new TransferConfirmEvent(networkType, entry.getId(), entry.getTxHash(), true));
+                    publisher.publish(new TransferConfirmEvent(currency, networkType, entry.getId(), entry.getTxHash(), true));
                 });
     }
 
