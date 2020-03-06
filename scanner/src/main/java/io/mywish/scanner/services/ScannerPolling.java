@@ -1,15 +1,12 @@
 package io.mywish.scanner.services;
 
-import io.mywish.scanner.model.NewPendingTransactionsEvent;
 import io.mywish.blockchain.WrapperBlock;
 import io.mywish.blockchain.WrapperNetwork;
-import io.mywish.blockchain.WrapperTransaction;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
