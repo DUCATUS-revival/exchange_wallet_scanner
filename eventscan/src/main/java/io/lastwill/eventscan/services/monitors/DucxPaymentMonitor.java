@@ -60,6 +60,7 @@ public class DucxPaymentMonitor {
                 transactionProvider.getTransactionReceiptAsync(event.getNetworkType(), transaction)
                         .thenAccept(receipt -> {
                             eventPublisher.publish(new UserPaymentEvent(
+                                    exchangeDetailsDUCX.getDucxAddress(),
                                     NetworkType.DUCATUSX_MAINNET,
                                     transaction,
                                     transaction.getOutputs().get(0).getValue(),

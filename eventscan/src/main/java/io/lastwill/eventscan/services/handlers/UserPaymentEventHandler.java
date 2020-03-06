@@ -21,12 +21,13 @@ public class UserPaymentEventHandler {
             externalNotifier.send(
                     event.getNetworkType(),
                     new PaymentNotify(
+                            event.getAddress(),
                             event.getAmount(),
                             PaymentStatus.COMMITTED,
                             event.getTransaction().getHash(),
                             event.getCurrency(),
                             event.isSuccess()
-                            )
+                    )
             );
         } catch (Throwable e) {
             log.error("Sending notification about transition confirmed are failed.", e);

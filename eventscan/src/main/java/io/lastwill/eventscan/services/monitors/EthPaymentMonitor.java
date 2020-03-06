@@ -60,6 +60,7 @@ public class EthPaymentMonitor {
                 transactionProvider.getTransactionReceiptAsync(event.getNetworkType(), transaction)
                         .thenAccept(receipt -> {
                             eventPublisher.publish(new UserPaymentEvent(
+                                    exchangeDetailsETH.getEthAddress(),
                                     NetworkType.ETHEREUM_MAINNET,
                                     transaction,
                                     transaction.getOutputs().get(0).getValue(),

@@ -53,6 +53,7 @@ public class BtcPaymentMonitor {
                             }
                             eventPublisher.publish(
                                     new UserPaymentEvent(
+                                            exchangeDetails.getBtcAddress(),
                                             NetworkType.BTC_MAINNET,
                                             tx,
                                             output.getValue(),
