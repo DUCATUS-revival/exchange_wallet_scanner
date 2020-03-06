@@ -33,12 +33,6 @@
             <artifactId>bitcoinj-core</artifactId>
             <version>${bitcoinj.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.mishan74.bitcoinj</groupId>
-            <artifactId>bitcoinj-core</artifactId>
-            <version>a9b21ab</version>
-            <scope>compile</scope>
-        </dependency>
 
     </dependencies>
     <repositories>
