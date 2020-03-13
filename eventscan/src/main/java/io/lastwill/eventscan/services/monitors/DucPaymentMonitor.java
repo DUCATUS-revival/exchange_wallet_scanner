@@ -54,6 +54,7 @@ public class DucPaymentMonitor {
                             }
                             eventPublisher.publish(
                                     new UserPaymentEvent(
+                                            exchangeDetails.getId(),
                                             exchangeDetails.getDucAddress(),
                                             NetworkType.DUCATUS_MAINNET,
                                             tx,

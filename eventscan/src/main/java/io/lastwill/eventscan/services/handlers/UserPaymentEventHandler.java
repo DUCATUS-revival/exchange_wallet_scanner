@@ -21,6 +21,7 @@ public class UserPaymentEventHandler {
             externalNotifier.send(
                     event.getNetworkType(),
                     new PaymentNotify(
+                            event.getExchangeId(),
                             event.getAddress(),
                             event.getAmount(),
                             PaymentStatus.COMMITTED,
