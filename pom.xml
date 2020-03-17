@@ -27,7 +27,7 @@
     </modules>
 
     <properties>
-        <db-url>jdbc:postgresql://localhost/exchange</db-url>
+        <db-url>jdbc:postgresql://localhost/ducatus_exchange</db-url>
         <!-- maven-compiler-plugin -->
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
