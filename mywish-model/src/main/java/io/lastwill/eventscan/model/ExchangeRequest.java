@@ -5,7 +5,7 @@ import lombok.Getter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "exchange_request")
+@Table(name = "exchange_requests_exchangerequest")
 @Getter
 public class ExchangeRequest {
     @Id

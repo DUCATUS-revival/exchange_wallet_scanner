@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.math.BigInteger;
 
 @Entity
-@Table(name = "transfer")
+@Table(name = "transfers_ducatustransfer")
 @Getter
 public class Transfer {
     @Id
@@ -19,7 +19,7 @@ public class Transfer {
     @Column(name = "amount")
     private BigInteger amount;
 
-    @Column(name = "status")
+    @Column(name = "state")
     @Enumerated(EnumType.STRING)
     private TransactionStatus status;
 
