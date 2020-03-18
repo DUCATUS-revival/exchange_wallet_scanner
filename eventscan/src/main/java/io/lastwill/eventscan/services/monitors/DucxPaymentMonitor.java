@@ -40,7 +40,7 @@ public class DucxPaymentMonitor {
             return;
         }
 
-        List<ExchangeRequest> exchangeDetails = exchangRequestRepository.findByDucxRxAddress(addresses);
+        Set<ExchangeRequest> exchangeDetails = exchangRequestRepository.findByDucxRxAddress(addresses);
         for (ExchangeRequest exchangeDetailsDUCX : exchangeDetails) {
             final List<WrapperTransaction> transactions = event.getTransactionsByAddress().get(
                     exchangeDetailsDUCX.getDucxAddress().toLowerCase()

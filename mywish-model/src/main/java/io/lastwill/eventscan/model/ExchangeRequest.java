@@ -3,6 +3,7 @@ package io.lastwill.eventscan.model;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "exchange_requests_exchangerequest")
@@ -24,5 +25,19 @@ public class ExchangeRequest {
     @Column(name = "eth_address")
     private String ethAddress;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExchangeRequest that = (ExchangeRequest) o;
+        return Objects.equals(ducAddress, that.ducAddress) &&
+                Objects.equals(ducxAddress, that.ducxAddress) &&
+                Objects.equals(btcAddress, that.btcAddress) &&
+                Objects.equals(ethAddress, that.ethAddress);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(ducAddress, ducxAddress, btcAddress, ethAddress);
+    }
 }

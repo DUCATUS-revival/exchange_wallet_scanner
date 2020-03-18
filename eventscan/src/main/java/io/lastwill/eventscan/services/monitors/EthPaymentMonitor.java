@@ -40,7 +40,7 @@ public class EthPaymentMonitor {
             return;
         }
 
-        List<ExchangeRequest> exchangeDetails = exchangRequestRepository.findByEthRxAddress(addresses);
+        Set<ExchangeRequest> exchangeDetails = exchangRequestRepository.findByEthRxAddress(addresses);
         for (ExchangeRequest exchangeDetailsETH : exchangeDetails) {
             final List<WrapperTransaction> transactions = event.getTransactionsByAddress().get(
                     exchangeDetailsETH.getEthAddress().toLowerCase()

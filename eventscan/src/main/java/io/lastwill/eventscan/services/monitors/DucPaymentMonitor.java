@@ -2,7 +2,6 @@ package io.lastwill.eventscan.services.monitors;
 
 import io.lastwill.eventscan.events.model.UserPaymentEvent;
 import io.lastwill.eventscan.model.CryptoCurrency;
-import io.lastwill.eventscan.model.ExchangeRequest;
 import io.lastwill.eventscan.model.NetworkType;
 import io.lastwill.eventscan.repositories.ExchangRequestRepository;
 import io.mywish.blockchain.WrapperOutput;
